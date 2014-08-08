@@ -100,6 +100,7 @@ var TelosysGenerator = yeoman.generators.Base.extend({
         this.mkdir('TelosysTools/templates');
         this.mkdir('TelosysTools/lib');
         
+        this.template('_databases.dbcfg', 'TelosysTools/database.dbcfg');
 
         // telosys-tools.cfg
         var cfg = "#Telosys-Tools properties\n"
