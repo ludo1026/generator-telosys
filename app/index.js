@@ -23,16 +23,18 @@ var TelosysGenerator = yeoman.generators.Base.extend({
         // Have Yeoman greet the user.
         this.log(yosay('Welcome to the marvelous Telosys generator!'));
 
+        try {
+        	var currentPaths = process.cwd().split(path.sep);
+        	var currentDir = currentPaths[currentPaths.length-1];
+        } catch(e) {
+        	currentDir = "myproject";
+        }
+        
         var prompts = [{
-            type: 'confirm',
-            name: 'someOption',
-            message: 'Would you like to enable this option?',
-            default: true
-        },{
             type: 'input',
             name: 'projectName',
             message: 'Project name',
-            default: "myproject"
+            default: currentDir
         },{
             type: 'input',
             name: 'projectVersion',
@@ -71,7 +73,6 @@ var TelosysGenerator = yeoman.generators.Base.extend({
         }];
 
         this.prompt(prompts, function (props) {
-            this.someOption = props.someOption;
             this.projectName = props.projectName;
             this.projectVersion = props.projectVersion;
             this.rootPkg = props.rootPkg;
@@ -88,12 +89,17 @@ var TelosysGenerator = yeoman.generators.Base.extend({
     },
 
     app: function () {
+    	this.template('_package.json', 'package.json');
+    	
+    	// Eclipse config file
+    	this.template('_.project', '.project');
+    	
         // Telosys directory
         this.mkdir('TelosysTools');
         this.mkdir('TelosysTools/downloads');
         this.mkdir('TelosysTools/templates');
         this.mkdir('TelosysTools/lib');
-
+        
 
         // telosys-tools.cfg
         var cfg = "#Telosys-Tools properties\n"
@@ -122,19 +128,19 @@ var TelosysGenerator = yeoman.generators.Base.extend({
             cfg += "ENTITY_PKG="+this.entityPkg+"\n";
         }
         if(this.src != null) {
-            cfg += "ProjectVariable.SRC="+this.src+"\n";
+            cfg += "SRC="+this.src+"\n";
         }
         if(this.res != null) {
-            cfg += "ProjectVariable.RES="+this.res+"\n";
+            cfg += "RES="+this.res+"\n";
         }
         if(this.testSrc != null) {
-            cfg += "ProjectVariable.SRC="+this.testSrc+"\n";
+            cfg += "TEST_SRC="+this.testSrc+"\n";
         }
         if(this.testRes != null) {
-            cfg += "ProjectVariable.TEST_RES="+this.testRes+"\n";
+            cfg += "TEST_RES="+this.testRes+"\n";
         }
         if(this.web != null) {
-            cfg += "ProjectVariable.TEST_RES="+this.web+"\n";
+            cfg += "WEB="+this.web+"\n";
         }
         this.write("telosys-tools.cfg",cfg);
 
