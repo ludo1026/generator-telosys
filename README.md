@@ -18,7 +18,7 @@ You will be able to generate your application with Telosys Tools.
 ```npm install -g yeoman```
 
 * Install ```telosys-generator``` for yeoman
-```npm install -g telosys-generator````
+```npm install -g telosys-generator```
 
 * Create a new directory
 ```mkdir project1
