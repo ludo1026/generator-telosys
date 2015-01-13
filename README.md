@@ -11,11 +11,3 @@ This yeoman generator initialize an empty project by creating the Telosys Tools 
 You have just to answer the questions and you can import this project in eclipse which have the Telosys Tools plugin.
 
 You will be able to generate your application with Telosys Tools.
-
-# Tutorial
-
-* Install yeoman :
-```npm install -g yeoman```
-
-* Install TelosysTools generator for yeoman :
-```yo telosys```
