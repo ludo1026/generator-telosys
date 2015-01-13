@@ -4,12 +4,34 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 var yosay = require('yosay');
 var chalk = require('chalk');
-
+// http://mikedeboer.github.io/node-github/
+var gutil = require("gutil");
+var GitHubApi = require("github");
+var git  = require('gift');
 
 var TelosysGenerator = yeoman.generators.Base.extend({
     init: function () {
         this.pkg = require('../package.json');
 
+	   	var github = this.github = new GitHubApi({
+	   	    // required
+	   	    version: "3.0.0",
+	   	    // optional
+	   	    debug: false,
+	   	    timeout: 5000
+	   	});
+	   	var repoChoices = this.repoChoices = [{value:"none",name:"none"}];
+	   	github.repos.getFromUser({user:"telosys-tools"}, function(err, data) {
+	   		if(err != null) {
+	   			console.log("error:"+err);
+	   		} else {
+	   			gutil.each(data, function(repo) {
+	   				//console.log(repo.name);
+	   				repoChoices.push({value:repo.name,name:repo.name});
+	   			})
+	   		}
+	   	});
+   	
         this.on('end', function () {
             if (!this.options['skip-install']) {
                 this.installDependencies();
@@ -18,7 +40,8 @@ var TelosysGenerator = yeoman.generators.Base.extend({
     },
 
     askFor: function () {
-        var done = this.async();
+
+    	var done = this.async();
 
         // Have Yeoman greet the user.
         this.log(yosay('Welcome to the marvelous Telosys generator!'));
@@ -70,6 +93,12 @@ var TelosysGenerator = yeoman.generators.Base.extend({
             name: 'web',
             message: 'Web directory',
             default: "src/main/webapp"
+        },{
+            type: 'checkbox',
+            name: 'bundles',
+            message: 'Bundle',
+            choices: this.repoChoices,
+            default: 0
         }];
 
         this.prompt(prompts, function (props) {
@@ -84,6 +113,7 @@ var TelosysGenerator = yeoman.generators.Base.extend({
             this.testSrc = props.testSrc;
             this.testRes = props.testRes;
             this.web = props.web;
+            this.bundles = props.bundles;
             done();
         }.bind(this));
     },
@@ -173,6 +203,26 @@ var TelosysGenerator = yeoman.generators.Base.extend({
         if(this.web != null) {
             this.mkdir(this.web);
             this.mkdir(path.join(this.web,"WEB-INF"));
+        }
+        
+        // Download from github
+        // Clone a given repository into a specific folder.
+        if(this.bundles != null) {
+        	for(var i=0; i<this.bundles.length; i++) {
+        		var bundle = this.bundles[i];
+        		if(bundle != null && bundle != "" && bundle != "none") {
+                    var giturl = "https://github.com/telosys-tools/"+bundle;
+                    var dest = "TelosysTools/downloads/"+bundle;
+                    console.log("=> Download bundle : "+bundle+"");
+                    git.clone(giturl, dest, function(err, _repo) {
+                        if(err) {
+                            console.log(err);
+                        } else {
+                            console.log("=> Bundle downloaded");
+                        }
+                    });
+        		}
+        	}
         }
     },
 
