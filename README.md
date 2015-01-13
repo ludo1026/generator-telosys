@@ -26,6 +26,7 @@ cd project1```
 * Initialize your project
 ```yo telosys```
 * Answer these questions :
+```
   * Project name ? (Folder's name by default)
   * Project version ?
   * Root package ?
@@ -41,6 +42,7 @@ cd project1```
       * persistence-springdatajpa-TT210-R2
       * service-springdatajpa-TT210-R2
     * Validate your choice with ENTER
+```
 => Your project is initialized and the bundles are downloaded.
 
 You can now import your project in eclipse.
