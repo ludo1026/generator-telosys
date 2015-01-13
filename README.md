@@ -1,6 +1,8 @@
 # Telosys Tools
 
-Telosys Tools helps you to start a new application by generating one from an existing sql database.
+Telosys Tools helps you to start a new application by generating one from an existing sql database :
+  - Spring MVC + Spring Data JPA
+  - AngularJS + Spring MVC + Spring Data JPA
 
 Telosys Tools is an eclipse plugin.
 
